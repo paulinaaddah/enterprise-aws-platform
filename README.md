@@ -63,3 +63,415 @@ Each phase of the project contains:
 ## Project Status
 
 **Current Phase:** Project Foundation
+# Enterprise AWS Platform
+
+## Enterprise Implementation Handbook
+
+---
+
+# Chapter 1 - Preparing the Development Environment
+
+## Learning Objectives
+
+By the end of this chapter you will be able to:
+
+* Create the project repository.
+* Clone the repository locally.
+* Open the project in Visual Studio Code.
+* Create the enterprise project structure.
+* Configure Terraform.
+* Validate the Terraform configuration.
+* Commit the initial project to GitHub.
+
+---
+
+# Business Scenario
+
+Lina Financial Services has decided to standardize all cloud infrastructure using Infrastructure as Code (IaC). Before any AWS resources can be provisioned, the Cloud Platform Engineering team must establish a consistent project structure, configure Terraform, and prepare the development environment.
+
+This chapter establishes the foundation that will be used throughout the remainder of the project.
+
+---
+
+# Prerequisites
+
+Install the following software before beginning:
+
+* Git
+* Visual Studio Code
+* Terraform
+* AWS CLI
+
+---
+
+# Step 1 - Verify the Installed Software
+
+Open **PowerShell**.
+
+Verify Git.
+
+```powershell
+git --version
+```
+
+Expected output:
+
+```text
+git version 2.x.x
+```
+
+Verify Terraform.
+
+```powershell
+terraform version
+```
+
+Expected output:
+
+```text
+Terraform v1.x.x
+```
+
+Verify AWS CLI.
+
+```powershell
+aws --version
+```
+
+Expected output:
+
+```text
+aws-cli/2.x.x
+```
+
+---
+
+# Step 2 - Create the GitHub Repository
+
+1. Open GitHub.
+2. Click **New Repository**.
+3. Repository name:
+
+```text
+enterprise-aws-platform
+```
+
+4. Select **Public**.
+5. Click **Create Repository**.
+
+---
+
+# Step 3 - Clone the Repository
+
+Open PowerShell.
+
+Navigate to the directory where you keep your projects.
+
+Example:
+
+```powershell
+cd C:\Users\paddah
+```
+
+Clone the repository.
+
+```powershell
+git clone https://github.com/paulinaaddah/enterprise-aws-platform.git
+```
+
+Move into the project.
+
+```powershell
+cd enterprise-aws-platform
+```
+
+Open the project in Visual Studio Code.
+
+```powershell
+code .
+```
+
+Expected result:
+
+Visual Studio Code opens the project.
+
+---
+
+# Step 4 - Create the Project Structure
+
+Inside Visual Studio Code:
+
+Right-click **enterprise-aws-platform**
+
+Select **New Folder**
+
+Create:
+
+```text
+.github
+```
+
+Open `.github`.
+
+Create:
+
+```text
+workflows
+```
+
+Go back to the project root.
+
+Create the following folders one by one.
+
+```text
+docs
+```
+
+```text
+diagrams
+```
+
+```text
+scripts
+```
+
+```text
+terraform
+```
+
+Open the **terraform** folder.
+
+Create:
+
+```text
+bootstrap
+```
+
+```text
+modules
+```
+
+```text
+environments
+```
+
+```text
+global
+```
+
+The project should now look like this:
+
+```text
+enterprise-aws-platform/
+│
+├── .github/
+│   └── workflows/
+│
+├── diagrams/
+├── docs/
+├── scripts/
+│
+├── terraform/
+│   ├── bootstrap/
+│   ├── environments/
+│   ├── global/
+│   └── modules/
+│
+├── README.md
+└── .gitignore
+```
+
+---
+
+# Step 5 - Create the Bootstrap Files
+
+Open:
+
+```text
+terraform/bootstrap
+```
+
+Create the following files.
+
+```text
+versions.tf
+```
+
+```text
+provider.tf
+```
+
+```text
+variables.tf
+```
+
+```text
+locals.tf
+```
+
+```text
+main.tf
+```
+
+```text
+outputs.tf
+```
+
+```text
+terraform.tfvars
+```
+
+Do not add any code yet.
+
+---
+
+# Step 6 - Configure Terraform
+
+Open:
+
+```text
+terraform/bootstrap/versions.tf
+```
+
+Paste:
+
+```hcl
+terraform {
+
+  required_version = ">= 1.8.0"
+
+  required_providers {
+
+    aws = {
+
+      source  = "hashicorp/aws"
+
+      version = "~> 5.100"
+
+    }
+
+  }
+
+}
+```
+
+Continue with:
+
+* provider.tf
+* variables.tf
+* locals.tf
+* terraform.tfvars
+
+using the configurations created during this project.
+
+---
+
+# Step 7 - Initialize Terraform
+
+Open the VS Code terminal.
+
+Navigate to the bootstrap directory.
+
+```powershell
+cd terraform/bootstrap
+```
+
+Initialize Terraform.
+
+```powershell
+terraform init
+```
+
+Expected output:
+
+```text
+Terraform has been successfully initialized!
+```
+
+---
+
+# Step 8 - Validate the Configuration
+
+Run:
+
+```powershell
+terraform validate
+```
+
+Expected output:
+
+```text
+Success! The configuration is valid.
+```
+
+---
+
+# Step 9 - Configure Git
+
+Create the `.gitignore` file.
+
+Ensure it excludes:
+
+* `.terraform/`
+* `*.tfstate`
+* `*.tfstate.*`
+
+Ensure it includes:
+
+```text
+.terraform.lock.hcl
+```
+
+---
+
+# Step 10 - Commit the Project
+
+From the project root run:
+
+```powershell
+git add .
+```
+
+```powershell
+git status
+```
+
+Verify that `.terraform/` is **not** listed.
+
+Commit the project.
+
+```powershell
+git commit -m "Phase 2: Configure Terraform bootstrap project"
+```
+
+Push the repository.
+
+```powershell
+git push origin main
+```
+
+---
+
+# Validation Checklist
+
+At the end of this chapter confirm:
+
+* Git installed
+* Terraform installed
+* AWS CLI installed
+* Repository cloned
+* Project structure created
+* Terraform configured
+* Terraform initialized
+* Terraform validated
+* GitHub repository updated
+
+---
+
+# Next Chapter
+
+Chapter 2 begins by provisioning the Terraform remote backend using:
+
+* AWS KMS
+* Amazon S3
+* DynamoDB
