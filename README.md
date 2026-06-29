@@ -475,3 +475,214 @@ Chapter 2 begins by provisioning the Terraform remote backend using:
 * AWS KMS
 * Amazon S3
 * DynamoDB
+# Git Commit Convention
+
+## Why We Use a Commit Convention
+
+As this project grows, hundreds of commits will be made. A consistent commit message format makes the project easier to understand, review, troubleshoot, and maintain.
+
+Instead of describing the file that changed, each commit describes **the type of work that was completed**.
+
+For example, if `README.md` is updated with a new chapter, the commit is not named after the file. Instead, it describes the work performed.
+
+Example:
+
+```bash
+git commit -m "docs: add Chapter 1 - Preparing the Development Environment"
+```
+
+This immediately tells every contributor that the commit contains documentation changes.
+
+---
+
+# Conventional Commit Format
+
+The project follows the Conventional Commits specification.
+
+General format:
+
+```text
+<type>: <short description>
+```
+
+Example:
+
+```text
+docs: add Chapter 2 - Terraform Bootstrap
+```
+
+---
+
+# Commit Types Used in This Project
+
+| Type       | Purpose                                              | Example                                     |
+| ---------- | ---------------------------------------------------- | ------------------------------------------- |
+| `feat`     | Introduces a new feature or infrastructure component | `feat: add VPC module`                      |
+| `fix`      | Fixes a bug or configuration issue                   | `fix: correct IAM trust policy`             |
+| `docs`     | Adds or updates documentation                        | `docs: add Chapter 3 - Terraform Bootstrap` |
+| `refactor` | Improves code without changing functionality         | `refactor: simplify Terraform modules`      |
+| `ci`       | Updates Continuous Integration or GitHub Actions     | `ci: add Terraform validation workflow`     |
+| `test`     | Adds or updates tests                                | `test: add Terraform validation tests`      |
+| `chore`    | Repository maintenance or housekeeping               | `chore: update .gitignore`                  |
+| `security` | Improves the security posture of the platform        | `security: enable S3 bucket encryption`     |
+
+---
+
+# Examples
+
+Adding a new Terraform module:
+
+```bash
+git commit -m "feat: add VPC module"
+```
+
+Updating documentation:
+
+```bash
+git commit -m "docs: add Chapter 4 - Remote Backend"
+```
+
+Correcting a Terraform configuration issue:
+
+```bash
+git commit -m "fix: correct S3 bucket policy"
+```
+
+Adding a GitHub Actions workflow:
+
+```bash
+git commit -m "ci: add Terraform plan workflow"
+```
+
+Updating the `.gitignore` file:
+
+```bash
+git commit -m "chore: update .gitignore"
+```
+
+Enabling encryption on an S3 bucket:
+
+```bash
+git commit -m "security: enable KMS encryption for Terraform state bucket"
+```
+
+---
+
+# Benefits
+
+Using a consistent commit convention provides several advantages:
+
+* Makes the Git history easy to read.
+* Clearly communicates the purpose of each commit.
+* Simplifies code reviews.
+* Helps identify infrastructure, documentation, security, and maintenance changes.
+* Follows industry-standard engineering practices used by many enterprise software teams.
+
+This convention will be followed throughout the Enterprise AWS Platform project.
+# Chapter 2 - Building the Terraform Remote Backend
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+* Understand why Terraform requires a remote backend.
+* Provision a customer-managed AWS KMS key.
+* Create an Amazon S3 bucket to store the Terraform state.
+* Enable S3 bucket versioning.
+* Configure server-side encryption using AWS KMS.
+* Block all forms of public access to the S3 bucket.
+* Create a DynamoDB table for state locking.
+* Configure Terraform to use the remote backend.
+* Validate the backend configuration.
+
+---
+
+# Business Scenario
+
+The Cloud Platform Engineering team has completed the local Terraform project configuration.
+
+At the moment, Terraform stores its state file (`terraform.tfstate`) on the engineer's local computer. While this approach is acceptable for learning purposes, it is not suitable for enterprise environments where multiple engineers collaborate on the same infrastructure.
+
+The organization has therefore decided to implement a centralized, secure, and highly available remote backend to store Terraform state.
+
+This backend will provide:
+
+* A single source of truth for infrastructure state.
+* Encryption of state data using AWS KMS.
+* Automatic versioning of the state file.
+* Protection against accidental public access.
+* State locking to prevent concurrent infrastructure changes.
+
+---
+
+# Why Not Store Terraform State Locally?
+
+When Terraform is executed locally, it creates a file named:
+
+```text
+terraform.tfstate
+```
+
+This file contains the current state of the deployed infrastructure.
+
+Problems with local state include:
+
+* State exists on only one engineer's computer.
+* Multiple engineers can overwrite each other's changes.
+* State is not automatically backed up.
+* Sensitive information may be stored in plaintext.
+* Recovery becomes difficult if the workstation is lost or damaged.
+
+For these reasons, enterprise environments use a remote backend.
+
+---
+
+# Target Architecture
+
+```text
+                    Terraform
+                        │
+                        ▼
+              Amazon S3 Backend
+                        │
+        ┌───────────────┴───────────────┐
+        ▼                               ▼
+ AWS KMS Encryption            Bucket Versioning
+                        │
+                        ▼
+              DynamoDB State Lock
+```
+
+---
+
+# Implementation Roadmap
+
+This chapter will be completed in the following order:
+
+| Step | Activity                        |
+| ---- | ------------------------------- |
+| 1    | Create the AWS KMS key          |
+| 2    | Create the Amazon S3 bucket     |
+| 3    | Enable bucket versioning        |
+| 4    | Enable server-side encryption   |
+| 5    | Block all public access         |
+| 6    | Create the DynamoDB table       |
+| 7    | Configure the Terraform backend |
+| 8    | Validate the deployment         |
+
+---
+
+# Prerequisites
+
+Before continuing, ensure the following have been completed:
+
+* Chapter 1 completed successfully.
+* Terraform initialized successfully.
+* `terraform validate` completed without errors.
+* AWS CLI configured.
+* AWS credentials authenticated.
+* Working AWS Region set to `us-east-1`.
+
+---
+
+The next section begins with creating the AWS KMS key, which will be used to encrypt the Terraform state stored in Amazon S3.
